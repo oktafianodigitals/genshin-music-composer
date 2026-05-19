@@ -53,15 +53,44 @@ const defaultShortcuts = {
         "ShiftLeft+KeyR": createShortcut("restart", false, "restart_description"),
         "Escape": createShortcut("stop", false, "stop_description"),
     },
-    keyboard: Object.fromEntries((APP_NAME === "Genshin"
+    keyboard: APP_NAME === "Heartopia"
+        ? Object.fromEntries([
+            // ── WHITE KEYS ──
+            // High octave row (Q W E R T Y U I)
+            ...("Q W E R T Y U I".split(" ").map(k => [`Key${k}`, createShortcut(k, false)])),
+            // Mid octave row (Z X C V B N M)
+            ...("Z X C V B N M".split(" ").map(k => [`Key${k}`, createShortcut(k, false)])),
+            // Low octave row (, . / O P [ ])
+            ["Comma",        createShortcut(",", false)],
+            ["Period",       createShortcut(".", false)],
+            ["Slash",        createShortcut("/", false)],
+            ["KeyO",         createShortcut("O", false)],
+            ["KeyP",         createShortcut("P", false)],
+            ["BracketLeft",  createShortcut("[", false)],
+            ["BracketRight", createShortcut("]", false)],
+            // ── BLACK KEYS ──
+            // Low octave black keys (L ; 0 - =)
+            ["KeyL",         createShortcut("L", false)],
+            ["Semicolon",    createShortcut(";", false)],
+            ["Digit0",       createShortcut("0", false)],
+            ["Minus",        createShortcut("-", false)],
+            ["Equal",        createShortcut("=", false)],
+            // Mid octave black keys (S D G H J) -> indices 27-31
+            ["KeyS",         createShortcut("S", false)],
+            ["KeyD",         createShortcut("D", false)],
+            ["KeyG",         createShortcut("G", false)],
+            ["KeyH",         createShortcut("H", false)],
+            ["KeyJ",         createShortcut("J", false)],
+            // High octave black keys (2 3 5 6 7)
+            ["Digit2",       createShortcut("2", false)],
+            ["Digit3",       createShortcut("3", false)],
+            ["Digit5",       createShortcut("5", false)],
+            ["Digit6",       createShortcut("6", false)],
+            ["Digit7",       createShortcut("7", false)],
+        ])
+        : Object.fromEntries((APP_NAME === "Genshin"
         ? (
             "Q W E R T Y U " +
-            "A S D F G H J " +
-            "Z X C V B N M"
-        ).split(" ")
-        : APP_NAME === "Heartopia"
-        ? (
-            "Q W E R T Y U I " +
             "A S D F G H J " +
             "Z X C V B N M"
         ).split(" ")

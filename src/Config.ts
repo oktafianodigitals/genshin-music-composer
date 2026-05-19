@@ -218,28 +218,59 @@ export const LAYOUT_KINDS = {
         playstationLayout: new Array(21).fill(" "),
         switchLayout: new Array(21).fill(" "),
     },
-    // Heartopia: 3×7 white keys + 1 high DO = 22 positions
+    // Heartopia: 3×7 white keys + 1 high DO (indices 0–21) + 3×5 black keys (indices 22–36) = 37 positions
+    // Heartopia: 3x7 white keys + 1 high DO (indices 0-21) + 3x5 black keys (indices 22-36) = 37 positions
+    // keyboardLayout index MUST match note index:
+    //   indices 0-6   = low  octave white keys
+    //   indices 7-13  = mid  octave white keys
+    //   indices 14-21 = high octave white keys + high DO
+    //   indices 22-26 = low  octave black keys
+    //   indices 27-31 = mid  octave black keys
+    //   indices 32-36 = high octave black keys
     defaultHeartopia: {
         keyboardLayout: (
-            // Row top — high octave (1̇ 2̇ 3̇ 4̇ 5̇ 6̇ 7̇ + 1̈ high DO)
+            // WHITE KEYS (low -> mid -> high, must match note indices 0-21)
+            // Row bottom - low  octave (indices 0-6)  : , . / O P [ ]
+            ", . / O P [ ] " +
+            // Row middle - mid  octave (indices 7-13) : Z X C V B N M
+            "Z X C V B N M " +
+            // Row top    - high octave (indices 14-20): Q W E R T Y U
+            // High DO                  (index 21)     : I
             "Q W E R T Y U I " +
-            // Row middle — mid octave
-            "A S D F G H J " +
-            // Row bottom — low octave
-            "Z X C V B N M").split(" "),
+            // BLACK KEYS (low -> mid -> high, must match note indices 22-36)
+            // Low  black keys (indices 22-26): C#3 D#3 F#3 G#3 A#3 -> L ; 0 - =
+            "L ; 0 - = " +
+            // Mid  black keys (indices 27-31): C#4 D#4 F#4 G#4 A#4 -> S D G H J
+            "S D G H J " +
+            // High black keys (indices 32-36): C#5 D#5 F#5 G#5 A#5 -> 2 3 5 6 7
+            "2 3 5 6 7"
+        ).split(" "),
         numberLayout: (
-            // High octave: dots above numbers
-            "1\u0307 2\u0307 3\u0307 4\u0307 5\u0307 6\u0307 7\u0307 1\u0307\u0307 " +
-            // Mid octave: plain numbers
+            // White keys - low octave (dots below, indices 0-6)
+            "1\u0323 2\u0323 3\u0323 4\u0323 5\u0323 6\u0323 7\u0323 " +
+            // White keys - mid octave (plain, indices 7-13)
             "1 2 3 4 5 6 7 " +
-            // Low octave: dots below numbers
-            "1\u0323 2\u0323 3\u0323 4\u0323 5\u0323 6\u0323 7\u0323").split(" "),
+            // White keys - high octave (dots above, indices 14-21)
+            "1\u0307 2\u0307 3\u0307 4\u0307 5\u0307 6\u0307 7\u0307 1\u0307\u0307 " +
+            // Black keys - low octave (indices 22-26)
+            "1\u0323\u266f 2\u0323\u266f 4\u0323\u266f 5\u0323\u266f 6\u0323\u266f " +
+            // Black keys - mid octave (indices 27-31)
+            "1\u266f 2\u266f 4\u266f 5\u266f 6\u266f " +
+            // Black keys - high octave (indices 32-36)
+            "1\u0307\u266f 2\u0307\u266f 4\u0307\u266f 5\u0307\u266f 6\u0307\u266f"
+        ).split(" "),
         abcLayout: (
-            "A1 A2 A3 A4 A5 A6 A7 A8 " +
+            // White keys - low -> mid -> high
+            "C1 C2 C3 C4 C5 C6 C7 " +
             "B1 B2 B3 B4 B5 B6 B7 " +
-            "C1 C2 C3 C4 C5 C6 C7").split(" "),
-        playstationLayout: new Array(22).fill(" "),
-        switchLayout: new Array(22).fill(" "),
+            "A1 A2 A3 A4 A5 A6 A7 A8 " +
+            // Black keys - low -> mid -> high
+            "C1# C2# C3# C4# C5# " +
+            "B1# B2# B3# B4# B5# " +
+            "A1# A2# A3# A4# A5#"
+        ).split(" "),
+        playstationLayout: new Array(37).fill(" "),
+        switchLayout: new Array(37).fill(" "),
     },
     defaultDrums: {
         keyboardLayout: (

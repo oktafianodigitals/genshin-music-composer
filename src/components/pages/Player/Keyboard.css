@@ -271,6 +271,17 @@
     width: fit-content;
 }
 
+/* ── Heartopia outer keyboard wrapper override ──
+   Overrides the .keyboard grid to be a flex centering wrapper instead */
+.keyboard-heartopia {
+    display: flex !important;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+}
+
 @media only screen and (max-width: 920px) {
     .keyboard-playback .click-event {
         transform: unset; /*performance reasons for mobile*/
@@ -390,13 +401,16 @@
 .heartopia-keyboard {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--htp-row-gap);
     padding-top: var(--htp-bk-rise);   /* room for black keys of HIGH row */
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     position: relative;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ── One octave row (relative so black keys can overflow top) ── */
@@ -668,13 +682,16 @@
 .heartopia-keyboard {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--htp-row-gap);
     padding-top: var(--htp-bk-rise);
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     position: relative;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .heartopia-row {
