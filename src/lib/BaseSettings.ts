@@ -83,7 +83,7 @@ export const ComposerSettings = {
             type: "select",
             songSetting: false,
             category: "composer_settings",
-            value: APP_NAME === "Genshin"
+            value: APP_NAME === "Genshin" || APP_NAME === "Heartopia"
                 ? isMobile()
                     ? "Do Re Mi"
                     : "Keyboard layout"
@@ -248,7 +248,7 @@ export const PlayerSettings = {
             type: "select",
             songSetting: false,
             category: "player_settings",
-            value: APP_NAME === "Genshin"
+            value: APP_NAME === "Genshin" || APP_NAME === "Heartopia"
                 ? isMobile()
                     ? "Do Re Mi"
                     : "Keyboard layout"
@@ -431,7 +431,7 @@ export const ThemeSettings = {
         note_background: {
             name: 'note_background',
             css: 'note-background',
-            value: APP_NAME === 'Genshin' ? '#fff9ef' : '#495466',
+            value: APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? '#fff9ef' : '#495466',
             text: BASE_THEME_CONFIG.text.note
         },
         composer_main_layer: {
@@ -712,7 +712,7 @@ export const ZenKeyboardSettings = {
             type: "select",
             songSetting: false,
             category: "keyboard",
-            value: APP_NAME === "Genshin"
+            value: APP_NAME === "Genshin" || APP_NAME === "Heartopia"
                 ? isMobile()
                     ? "Do Re Mi"
                     : "Keyboard layout"

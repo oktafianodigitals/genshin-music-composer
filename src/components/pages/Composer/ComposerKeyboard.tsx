@@ -1,6 +1,7 @@
 import ComposerNote from "$cmp/pages/Composer/ComposerNote"
 import {InstrumentData, NoteColumn} from "$lib/Songs/SongClasses"
-import {NoteNameType, Pitch, TEMPO_CHANGERS} from "$config"
+import {APP_NAME, NoteNameType, Pitch, TEMPO_CHANGERS} from "$config"
+import HeartopiaKeyboard from "$cmp/pages/Composer/HeartopiaKeyboard"
 import {Instrument, ObservableNote} from "$lib/audio/Instrument"
 import {ComposerSettingsDataType} from "$lib/BaseSettings"
 import {FaChevronLeft, FaChevronRight} from "react-icons/fa"
@@ -53,10 +54,11 @@ export default function ComposerKeyboard({data, functions}: ComposerKeyboardProp
         </div>
     }
     let keyboardClass = "keyboard"
-    if (keyboard.notes.length === 15) keyboardClass += " keyboard-5"
-    if (keyboard.notes.length === 14) keyboardClass += " keyboard-5"
-    if (keyboard.notes.length === 8) keyboardClass += " keyboard-4"
-    if (keyboard.notes.length === 6) keyboardClass += " keyboard-3"
+    if (APP_NAME === 'Heartopia') keyboardClass += " keyboard-heartopia"
+    else if (keyboard.notes.length === 15) keyboardClass += " keyboard-5"
+    else if (keyboard.notes.length === 14) keyboardClass += " keyboard-5"
+    else if (keyboard.notes.length === 8) keyboardClass += " keyboard-4"
+    else if (keyboard.notes.length === 6) keyboardClass += " keyboard-3"
 
     return <>
         <div className="composer-keyboard-wrapper">
@@ -73,32 +75,42 @@ export default function ComposerKeyboard({data, functions}: ComposerKeyboardProp
                     <FaChevronLeft/>
                 </button>
             }
-            <div
-                className={keyboardClass}
-            >
-                {keyboard.notes.length === 0 ? <div className="loading">Loading...</div> : null}
-                {keyboard.notes.map((note, i) => {
-                    try {
-                        const index = currentColumn.notes.findIndex((e) => e.index === i)
-
-                        return <ComposerNote
-                            key={note.index}
-                            layer={(index >= 0
-                                    ? currentColumn.notes[index].layer.toLayerStatus(currentLayer, data.instruments)
-                                    : 0
-                            )}
-                            data={note}
-                            theme={theme}
-                            noteText={keyboard.getNoteText(i, noteNameType, pitch)}
-                            instrument={keyboard.name}
-                            noteImage={note.noteImage}
-                            clickAction={handleClick}
-                        />
-                    } catch (e) {
-                        return 'Err'
-                    }
-                })}
-            </div>
+            {APP_NAME === 'Heartopia'
+                ? <HeartopiaKeyboard
+                    keyboard={keyboard}
+                    instruments={data.instruments}
+                    currentColumn={currentColumn}
+                    currentLayer={currentLayer}
+                    noteNameType={noteNameType}
+                    pitch={pitch}
+                    theme={theme}
+                    handleClick={handleClick}
+                    columnHash={currentColumn.notes.map(n => n.index + "-" + n.layer.serializeHex()).join(",")}
+                  />
+                : <div className={keyboardClass}>
+                    {keyboard.notes.length === 0 ? <div className="loading">Loading...</div> : null}
+                    {keyboard.notes.map((note, i) => {
+                        try {
+                            const index = currentColumn.notes.findIndex((e) => e.index === i)
+                            return <ComposerNote
+                                key={note.index}
+                                layer={(index >= 0
+                                        ? currentColumn.notes[index].layer.toLayerStatus(currentLayer, data.instruments)
+                                        : 0
+                                )}
+                                data={note}
+                                theme={theme}
+                                noteText={keyboard.getNoteText(i, noteNameType, pitch)}
+                                instrument={keyboard.name}
+                                noteImage={note.noteImage}
+                                clickAction={handleClick}
+                            />
+                        } catch (e) {
+                            return 'Err'
+                        }
+                    })}
+                  </div>
+            }
             {data.settings.useKeyboardSideButtons.value &&
                 <button
                     onPointerDown={() => functions.selectColumnFromDirection(1)}

@@ -316,7 +316,7 @@ class MidiSetup extends Component<WithTranslation<'keybinds'>, MidiSetupState> {
 
             <div className={s['midi-setup-content']}>
                 <div
-                    className={APP_NAME === 'Genshin' ? "keyboard" : "keyboard keyboard-5"}
+                    className={APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? "keyboard" : "keyboard keyboard-5"}
                     style={{margin: '1.5rem 0', width: 'fit-content'}}
                 >
                     {notes.map((note, i) => {

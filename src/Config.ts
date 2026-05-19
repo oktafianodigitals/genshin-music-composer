@@ -24,18 +24,18 @@ export const TAURI: Tauri = undefined //window?.__TAURI__
 //@ts-ignore
 export const IS_TAURI = !!TAURI
 export const NOTES_CSS_CLASSES = {
-    noteComposer: APP_NAME === "Genshin" ? "note-composer" : "note-composer-sky",
-    note: APP_NAME === "Genshin" ? "note" : "note-sky",
-    noteAnimation: APP_NAME === 'Genshin' ? "note-animation" : "note-animation-sky",
-    approachCircle: APP_NAME === "Genshin" ? "approach-circle" : "approach-circle-sky",
-    noteName: APP_NAME === "Genshin" ? "note-name" : "note-name-sky"
+    noteComposer: APP_NAME === "Genshin" ? "note-composer" : APP_NAME === "Heartopia" ? "note-composer-heartopia" : "note-composer-sky",
+    note: APP_NAME === "Genshin" ? "note" : APP_NAME === "Heartopia" ? "note-heartopia" : "note-sky",
+    noteAnimation: APP_NAME === 'Genshin' ? "note-animation" : APP_NAME === "Heartopia" ? "note-animation-heartopia" : "note-animation-sky",
+    approachCircle: APP_NAME === "Genshin" ? "approach-circle" : APP_NAME === "Heartopia" ? "approach-circle-heartopia" : "approach-circle-sky",
+    noteName: APP_NAME === "Genshin" ? "note-name" : APP_NAME === "Heartopia" ? "note-name-heartopia" : "note-name-sky"
 }
 
 export const BASE_THEME_CONFIG = {
     text: {
         light: '#eae8e6',
         dark: '#151414',
-        note: APP_NAME === 'Genshin' ? '#aaaa82' : '#eae8e6'
+        note: APP_NAME === 'Genshin' ? '#aaaa82' : APP_NAME === 'Heartopia' ? '#d4a96a' : '#eae8e6'
     }
 }
 export const INSTRUMENTS = APP_NAME === "Genshin"
@@ -50,6 +50,12 @@ export const INSTRUMENTS = APP_NAME === "Genshin"
         "HarmonicKey",
         "DunDun",
         "DjemDjemDrum"
+    ] as const
+    : APP_NAME === "Heartopia"
+    ? [
+        "PianoHato",
+        "GuitarHato",
+        "FluteHato",
     ] as const
     : [
         "Piano",
@@ -87,7 +93,7 @@ export const INSTRUMENTS = APP_NAME === "Genshin"
         "SFX_MantaCall",
         "SFX_MothCall"
     ] as const
-export const NOTES_PER_COLUMN = APP_NAME === "Genshin" ? 21 : 15
+export const NOTES_PER_COLUMN = APP_NAME === "Genshin" ? 21 : APP_NAME === "Heartopia" ? 37 : 15
 export const NOTE_SCALE = {
     "Cb": ["Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "Gbb", "Gb", "Abb", "Ab", "Bbb", "Bb"],
     "C": ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"],
@@ -140,6 +146,17 @@ export type BaseNote = keyof typeof NOTE_SCALE
 export const INSTRUMENT_NOTE_LAYOUT_KINDS = {
     defaultSky: ["C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G", "A", "B", "C"],
     defaultGenshin: ["C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G", "A", "B"],
+    // Heartopia: 22 white keys (indices 0–21), low→mid→high + high DO
+    defaultHeartopia: [
+        // Row Bottom — Low octave (indices 0–6)
+        "C", "D", "E", "F", "G", "A", "B",
+        // Row Middle — Mid octave (indices 7–13)
+        "C", "D", "E", "F", "G", "A", "B",
+        // Row Top — High octave (indices 14–20)
+        "C", "D", "E", "F", "G", "A", "B",
+        // High DO — top right (index 21)
+        "C"
+    ],
     skyBell: ["C", "D", "G", "A", "C", "D", "G", "A"],
     skyHandpan: ["D", "A", "C", "D", "F", "G", "A", "C"],
     defaultDrums: ["C", "D", "E", "F", "G", "A", "B", "C"],
@@ -154,6 +171,13 @@ Object.freeze(INSTRUMENT_NOTE_LAYOUT_KINDS)
 export const INSTRUMENT_MIDI_LAYOUT_KINDS = {
     defaultSky: [60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84],
     defaultGenshin: [72, 74, 76, 77, 79, 81, 83, 60, 62, 64, 65, 67, 69, 71, 48, 50, 52, 53, 55, 57, 59,],
+    // Heartopia: 22 white keys, C3–C6 (low→mid→high + high DO)
+    defaultHeartopia: [
+        48, 50, 52, 53, 55, 57, 59,   // C3–B3 (low octave)
+        60, 62, 64, 65, 67, 69, 71,   // C4–B4 (mid octave)
+        72, 74, 76, 77, 79, 81, 83,   // C5–B5 (high octave)
+        84                              // C6 (high DO)
+    ],
     skyBell: [60, 62, 67, 69, 72, 74, 79, 81],
     skyHandpan: [62, 69, 72, 74, 77, 79, 81, 84],
     defaultDrums: [60, 62, 64, 65, 67, 69, 71, 72],
@@ -165,7 +189,9 @@ export const INSTRUMENT_MIDI_LAYOUT_KINDS = {
 export const MIDI_PRESETS = [
     {
         name: "default",
-        notes: APP_NAME === "Sky" ? INSTRUMENT_MIDI_LAYOUT_KINDS.defaultSky : INSTRUMENT_MIDI_LAYOUT_KINDS.defaultGenshin
+        notes: APP_NAME === "Sky" ? INSTRUMENT_MIDI_LAYOUT_KINDS.defaultSky
+             : APP_NAME === "Heartopia" ? INSTRUMENT_MIDI_LAYOUT_KINDS.defaultHeartopia
+             : INSTRUMENT_MIDI_LAYOUT_KINDS.defaultGenshin
     }
 ] satisfies MIDIPreset[]
 
@@ -191,6 +217,29 @@ export const LAYOUT_KINDS = {
             "C1 C2 C3 C4 C5 C6 C7").split(" "),
         playstationLayout: new Array(21).fill(" "),
         switchLayout: new Array(21).fill(" "),
+    },
+    // Heartopia: 3×7 white keys + 1 high DO = 22 positions
+    defaultHeartopia: {
+        keyboardLayout: (
+            // Row top — high octave (1̇ 2̇ 3̇ 4̇ 5̇ 6̇ 7̇ + 1̈ high DO)
+            "Q W E R T Y U I " +
+            // Row middle — mid octave
+            "A S D F G H J " +
+            // Row bottom — low octave
+            "Z X C V B N M").split(" "),
+        numberLayout: (
+            // High octave: dots above numbers
+            "1\u0307 2\u0307 3\u0307 4\u0307 5\u0307 6\u0307 7\u0307 1\u0307\u0307 " +
+            // Mid octave: plain numbers
+            "1 2 3 4 5 6 7 " +
+            // Low octave: dots below numbers
+            "1\u0323 2\u0323 3\u0323 4\u0323 5\u0323 6\u0323 7\u0323").split(" "),
+        abcLayout: (
+            "A1 A2 A3 A4 A5 A6 A7 A8 " +
+            "B1 B2 B3 B4 B5 B6 B7 " +
+            "C1 C2 C3 C4 C5 C6 C7").split(" "),
+        playstationLayout: new Array(22).fill(" "),
+        switchLayout: new Array(22).fill(" "),
     },
     defaultDrums: {
         keyboardLayout: (
@@ -266,6 +315,13 @@ export const LAYOUT_ICONS_KINDS = {
     skySFX6: "cr dm cr cr dm cr".split(" ") as NoteImage[],
     defaultGenshin: "do re mi fa so la ti do re mi fa so la ti do re mi fa so la ti".split(" ") as NoteImage[],
     genshinVintageLyre: "do reb mib fa so lab tib do re mib fa so la tib do re mib fa so la tib".split(" ") as NoteImage[],
+    // Heartopia: 22 white key positions (3 octaves + high DO)
+    defaultHeartopia: (
+        "do re mi fa so la ti " +   // low octave
+        "do re mi fa so la ti " +   // mid octave
+        "do re mi fa so la ti " +   // high octave
+        "do"                         // high DO
+    ).split(" ") as NoteImage[],
 }
 export type NoteNameType =
     'Note name'
@@ -278,7 +334,7 @@ export type NoteNameType =
     | 'Switch'
     | '1 2 3'
 
-export const NOTE_NAME_TYPES: NoteNameType[] = APP_NAME === "Genshin"
+export const NOTE_NAME_TYPES: NoteNameType[] = APP_NAME === "Genshin" || APP_NAME === "Heartopia"
     ? [
         "Note name",
         "Keyboard layout",
@@ -430,6 +486,36 @@ export const BaseinstrumentsData: { [key in string]: InstrumentDataType } = APP_
         layout: LAYOUT_KINDS.defaultDrums,
         icons: LAYOUT_ICONS_KINDS.defaultGenshinDrums,
         midiNotes: INSTRUMENT_MIDI_LAYOUT_KINDS.defaultDrums,
+    },
+} : APP_NAME === "Heartopia" ? {
+    // Heartopia instruments — all share the 37-note defaultHeartopia layout
+    // Audio samples: reuse Genshin assets as placeholder (place heartopia audio in /assets/audio/heartopia/)
+    PianoHato: {
+        notes: 37,
+        family: "strings",
+        midiName: "orchestral harp",
+        baseNotes: INSTRUMENT_NOTE_LAYOUT_KINDS.defaultHeartopia,
+        layout: LAYOUT_KINDS.defaultHeartopia,
+        icons: LAYOUT_ICONS_KINDS.defaultHeartopia,
+        midiNotes: INSTRUMENT_MIDI_LAYOUT_KINDS.defaultHeartopia,
+    },
+    GuitarHato: {
+        notes: 37,
+        family: "strings",
+        midiName: "acoustic guitar (nylon)",
+        baseNotes: INSTRUMENT_NOTE_LAYOUT_KINDS.defaultHeartopia,
+        layout: LAYOUT_KINDS.defaultHeartopia,
+        icons: LAYOUT_ICONS_KINDS.defaultHeartopia,
+        midiNotes: INSTRUMENT_MIDI_LAYOUT_KINDS.defaultHeartopia,
+    },
+    FluteHato: {
+        notes: 37,
+        family: "pipe",
+        midiName: "flute",
+        baseNotes: INSTRUMENT_NOTE_LAYOUT_KINDS.defaultHeartopia,
+        layout: LAYOUT_KINDS.defaultHeartopia,
+        icons: LAYOUT_ICONS_KINDS.defaultHeartopia,
+        midiNotes: INSTRUMENT_MIDI_LAYOUT_KINDS.defaultHeartopia,
     },
 } : {
     "SFX_Dance": {
@@ -711,8 +797,34 @@ export const SPEED_CHANGERS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map(e => {
 export const PITCHES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"] as const
 export const PITCH_TO_INDEX = new Map<Pitch, number>(PITCHES.map((pitch, index) => [pitch, index]))
 export type Pitch = typeof PITCHES[number]
-export const COMPOSER_NOTE_POSITIONS = APP_NAME === "Genshin" ? [14, 15, 16, 17, 18, 19, 20, 7, 8, 9, 10, 11, 12, 13, 0, 1, 2, 3, 4, 5, 6].reverse() : [15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].reverse()
-export const IMPORT_NOTE_POSITIONS = APP_NAME === "Genshin" ? [14, 15, 16, 17, 18, 19, 20, 7, 8, 9, 10, 11, 12, 13, 0] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+// Heartopia COMPOSER_NOTE_POSITIONS: 37 notes (indices 0–36)
+// positions[noteIndex] = canvas Y row (0=top/highest, 36=bottom/lowest)
+// LOW notes (C3) at BOTTOM (row 36), HIGH notes (C6) at TOP (row 0)
+// Chromatic interleaved: white + black keys ordered by pitch
+const _heartopiaComposerPositions = [
+    // noteIndex: 0   1   2   3   4   5   6   7   8   9  10  11  12  13
+    /* white  */ 36, 34, 32, 31, 29, 27, 25, 24, 22, 20, 19, 17, 15, 13,
+    // noteIndex: 14  15  16  17  18  19  20  21
+    /* white  */ 12, 10,  8,  7,  5,  3,  1,  0,
+    // noteIndex: 22  23  24  25  26
+    /* blk low*/ 35, 33, 30, 28, 26,
+    // noteIndex: 27  28  29  30  31
+    /* blk mid*/ 23, 21, 18, 16, 14,
+    // noteIndex: 32  33  34  35  36
+    /* blk hi */ 11,  9,  6,  4,  2,
+]
+
+export const COMPOSER_NOTE_POSITIONS = APP_NAME === "Genshin"
+    ? [14, 15, 16, 17, 18, 19, 20, 7, 8, 9, 10, 11, 12, 13, 0, 1, 2, 3, 4, 5, 6].reverse()
+    : APP_NAME === "Heartopia"
+    ? _heartopiaComposerPositions
+    : [15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].reverse()
+
+export const IMPORT_NOTE_POSITIONS = APP_NAME === "Genshin"
+    ? [14, 15, 16, 17, 18, 19, 20, 7, 8, 9, 10, 11, 12, 13, 0]
+    : APP_NAME === "Heartopia"
+    ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 export const CACHE_DATA = {
     noteData: {
@@ -720,7 +832,10 @@ export const CACHE_DATA = {
         border: "#de6b45",
         center: "#de6b45"
     },
-    horizontalLineBreak: NOTES_PER_COLUMN / 3,
+    // Heartopia: HIGH=13 notes (7w+5b+highDO), MID=12, LOW=12
+    // Line 1 after row 13 (HIGH/MID), line 2 after row 25 (MID/LOW)
+    // Custom array [line1Row, line2Row]; other apps use single value
+    horizontalLineBreak: APP_NAME === "Heartopia" ? [13, 25] : NOTES_PER_COLUMN / 3,
     standards: [
         {
             color: 0x515c6f //lighter
@@ -768,7 +883,7 @@ export const TEMPO_CHANGERS = [
 ] as const
 export type TempoChanger = typeof TEMPO_CHANGERS[number]
 
-export type AppName = 'Sky' | 'Genshin'
+export type AppName = 'Sky' | 'Genshin' | 'Heartopia'
 
 export const EMPTY_LAYER = "0000"
 export const VSRG_TEMPO_CHANGER = [2, 1.75, 1.5, 1.25, 1, 0.75, 0.50, 0.25]
@@ -799,6 +914,53 @@ export const MIDI_MAP_TO_NOTE = new Map(Object.entries((APP_NAME === 'Sky'
         82: [12, true],
         83: [13, false],
         84: [14, false],
+    }
+    : APP_NAME === 'Heartopia'
+    ? {
+        // White keys (isAccidental = false) — indices 0–21
+        48: [0, false],   // C3  (do low)
+        50: [1, false],   // D3  (re low)
+        52: [2, false],   // E3  (mi low)
+        53: [3, false],   // F3  (fa low)
+        55: [4, false],   // G3  (sol low)
+        57: [5, false],   // A3  (la low)
+        59: [6, false],   // B3  (si low)
+        60: [7, false],   // C4  (do mid)
+        62: [8, false],   // D4  (re mid)
+        64: [9, false],   // E4  (mi mid)
+        65: [10, false],  // F4  (fa mid)
+        67: [11, false],  // G4  (sol mid)
+        69: [12, false],  // A4  (la mid)
+        71: [13, false],  // B4  (si mid)
+        72: [14, false],  // C5  (do high)
+        74: [15, false],  // D5  (re high)
+        76: [16, false],  // E5  (mi high)
+        77: [17, false],  // F5  (fa high)
+        79: [18, false],  // G5  (sol high)
+        81: [19, false],  // A5  (la high)
+        83: [20, false],  // B5  (si high)
+        84: [21, false],  // C6  (high DO)
+        // Black keys (isAccidental = true) — 5 per octave, piano layout
+        // Low octave black keys (indices 22–26)
+        49: [22, true],   // C#3 (between do–re, low)
+        51: [23, true],   // D#3 (between re–mi, low)
+        // no E#3 (mi–fa gap has no black key)
+        54: [24, true],   // F#3 (between fa–sol, low)
+        56: [25, true],   // G#3 (between sol–la, low)
+        58: [26, true],   // A#3 (between la–si, low)
+        // no B#3 (si–do gap has no black key)
+        // Mid octave black keys (indices 27–31)
+        61: [27, true],   // C#4 (between do–re, mid)
+        63: [28, true],   // D#4 (between re–mi, mid)
+        66: [29, true],   // F#4 (between fa–sol, mid)
+        68: [30, true],   // G#4 (between sol–la, mid)
+        70: [31, true],   // A#4 (between la–si, mid)
+        // High octave black keys (indices 32–36)
+        73: [32, true],   // C#5 (between do–re, high)
+        75: [33, true],   // D#5 (between re–mi, high)
+        78: [34, true],   // F#5 (between fa–sol, high)
+        80: [35, true],   // G#5 (between sol–la, high)
+        82: [36, true],   // A#5 (between la–si, high)
     }
     : {
         48: [14, false],
@@ -853,7 +1015,7 @@ export const VSRG_SCORE_COLOR_MAP = {
 }
 export const FOLDER_FILTER_TYPES = ["alphabetical", "date-created"] as const
 
-export const MIDI_BOUNDS = APP_NAME === "Genshin"
+export const MIDI_BOUNDS = APP_NAME === "Genshin" || APP_NAME === "Heartopia"
     ? {
         upper: 84,
         lower: 48

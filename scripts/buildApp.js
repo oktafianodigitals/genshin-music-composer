@@ -4,28 +4,31 @@ import clc from "cli-color";
 import { execSync } from 'child_process'
 const skyPath = './src/appData/sky'
 const genshinPath = './src/appData/genshin'
+const heartopiaPath = './src/appData/heartopia'
 const publicPath = './public'
 const chosenApp = process.argv[2]
 const date = new Date()
 const SW_VERSION = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}`
 const PATH_NAMES = {
     Sky: "skyMusic",
-    Genshin: "genshinMusic"
+    Genshin: "genshinMusic",
+    Heartopia: "heartopiaMusic"
 }
-if (!['Genshin', 'Sky', "All"].includes(chosenApp)) {
-    console.error('Please specify an app name [Sky / Genshin / All]')
+if (!['Genshin', 'Sky', 'Heartopia', "All"].includes(chosenApp)) {
+    console.error('Please specify an app name [Sky / Genshin / Heartopia / All]')
     process.exit(1)
 }
 
 
 
 async function execute() {
-    const toBuild = chosenApp === "All" ? ['Sky', 'Genshin'] : [chosenApp]
+    const toBuild = chosenApp === "All" ? ['Sky', 'Genshin', 'Heartopia'] : [chosenApp]
     try {
         for (const app of toBuild) {
             const basePath = Boolean(process.argv[3]) ? `/${PATH_NAMES[app]}` : ""
             console.log(clc.bold.yellow(`Building ${app}...`))
-            await fse.copy(app === "Sky" ? skyPath : genshinPath, publicPath, { overwrite: true })
+            const appPath = app === "Sky" ? skyPath : app === "Heartopia" ? heartopiaPath : genshinPath
+            await fse.copy(appPath, publicPath, { overwrite: true })
             await updateManifest(basePath)
             if (process.platform === 'win32') {
                 console.log(clc.italic("Building on windows"))

@@ -41,7 +41,7 @@ export function ZenNote({note, onClick, noteImage, noteText, instrumentName, key
     }, [onClick, note])
     useEffect(() => {
         function onStatusChange() {
-            if (APP_NAME === 'Genshin') {
+            if (APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') {
                 setStatus("clicked")
                 setStatusId((v) => v + 1)
                 setTimeout(() => setStatus(""), 100)
@@ -60,7 +60,7 @@ export function ZenNote({note, onClick, noteImage, noteText, instrumentName, key
         })
     }, [])
 
-    const className = `${parseClass(status)} ${(APP_NAME === 'Genshin' ? '' : s['sky-zen-note'])}`
+    const className = `${parseClass(status)} ${(APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? '' : s['sky-zen-note'])}`
     const clickColor = INSTRUMENTS_DATA[instrumentName]?.clickColor
     return <button
         onPointerDown={handleClick}
@@ -68,7 +68,7 @@ export function ZenNote({note, onClick, noteImage, noteText, instrumentName, key
         className="button-hitbox-bigger"
         style={{padding: `${keyPadding}rem`}}
     >
-        {APP_NAME === 'Genshin' &&
+        {(APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') &&
             <div
                 key={statusId}
                 style={clickColor && ThemeProvider.isDefault('accent')
@@ -81,7 +81,7 @@ export function ZenNote({note, onClick, noteImage, noteText, instrumentName, key
             ref={ref}
             className={className}
         >
-            {APP_NAME === 'Genshin' && <GenshinNoteBorder
+            {(APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') && <GenshinNoteBorder
                 className='genshin-border'
                 fill={parseBorderFill(status)}
             />}
@@ -123,7 +123,7 @@ function parseBorderFill(status: NoteStatus) {
 
 function getTextColor() {
     const noteBg = ThemeProvider.get('note_background')
-    if (APP_NAME === 'Genshin') {
+    if (APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') {
         if (noteBg.luminosity() > 0.65) {
             return BASE_THEME_CONFIG.text.note
         } else {

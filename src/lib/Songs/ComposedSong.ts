@@ -352,7 +352,7 @@ export class ComposedSong extends Song<ComposedSong, SerializedComposedSong, 3> 
     }
 
     moveNotesBy(selectedColumns: number[], amount: number, layer: number | 'all') {
-        const layoutMax = APP_NAME === 'Genshin' ? 21 : 15
+        const layoutMax = APP_NAME === 'Genshin' ? 21 : APP_NAME === 'Heartopia' ? 37 : 15
         const fromNotePosition = new Map([...COMPOSER_NOTE_POSITIONS].reverse().map((n, i) => [n, i]))
         const toNotePosition = new Map([...COMPOSER_NOTE_POSITIONS].reverse().map((n, i) => [i, n]))
         if (layer === 'all') {

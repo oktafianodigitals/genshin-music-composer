@@ -5,7 +5,12 @@ import {Application, Rectangle, SCALE_MODES, Texture} from 'pixi.js'
 import {NoteLayer} from "$lib/Songs/Layer";
 
 settings.LINE_SCALE_MODE = LINE_SCALE_MODE.NORMAL
-const {horizontalLineBreak, standards, layersCombination, breakpoints} = CACHE_DATA
+const {standards, layersCombination, breakpoints} = CACHE_DATA
+// horizontalLineBreak: number for Sky/Genshin, [line1, line2] array for Heartopia
+const _hlb = CACHE_DATA.horizontalLineBreak
+const horizontalLineBreaks: [number, number] = Array.isArray(_hlb)
+    ? _hlb as [number, number]
+    : [_hlb, _hlb * 2]
 
 interface ComposerCacheProps {
     width: number
@@ -217,8 +222,8 @@ export class ComposerCache {
             .moveTo(this.width, 0)
             .lineTo(this.width, this.height)
         g.lineStyle(1, 0x333333)
-        for (let i = 1; i < 3; i++) {
-            const y = this.noteHeight * horizontalLineBreak * i
+        for (let i = 0; i < 2; i++) {
+            const y = this.noteHeight * horizontalLineBreaks[i]
             g.moveTo(0, y)
             g.lineTo(this.width, y)
         }

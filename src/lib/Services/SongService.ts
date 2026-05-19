@@ -126,6 +126,9 @@ class SongService {
         if (APP_NAME === 'Sky' && song.data?.appName !== 'Sky') {
             throw new Error("Error Invalid song, it's not a Sky song")
         }
+        if (APP_NAME === 'Heartopia' && song.data?.appName !== 'Heartopia') {
+            throw new Error("Error Invalid song, it's not a Heartopia song")
+        }
         if (APP_NAME === 'Genshin' && song.data?.appName === 'Sky') {
             if (song.type === 'vsrg') return VsrgSong.deserialize(song).toGenshin()
             //always put those below because of the legacy format

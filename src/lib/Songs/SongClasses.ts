@@ -89,7 +89,7 @@ export interface SerializedInstrumentData {
 
 export class InstrumentData {
     name: InstrumentName = INSTRUMENTS[0]
-    volume: number = APP_NAME === 'Genshin' ? 90 : 100
+    volume: number = APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 90 : 100
     pitch: Pitch | "" = ""
     visible: boolean = true
     icon: InstrumentNoteIcon = 'circle'

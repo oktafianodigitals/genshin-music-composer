@@ -59,6 +59,12 @@ const defaultShortcuts = {
             "A S D F G H J " +
             "Z X C V B N M"
         ).split(" ")
+        : APP_NAME === "Heartopia"
+        ? (
+            "Q W E R T Y U I " +
+            "A S D F G H J " +
+            "Z X C V B N M"
+        ).split(" ")
         : (
             "Q W E R T " +
             "A S D F G " +

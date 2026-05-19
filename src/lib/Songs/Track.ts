@@ -16,7 +16,7 @@ const instrumentNoteMap = new Map([['border', 1], ['circle', 2], ['line', 3]])
 
 export class Track {
     instrument: InstrumentName = INSTRUMENTS[0]
-    volume: number = APP_NAME === 'Genshin' ? 90 : 100
+    volume: number = APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 90 : 100
     pitch: Pitch | "" = ""
     visible: boolean = true
     icon: InstrumentNoteIcon = 'circle'
@@ -478,7 +478,7 @@ export class ComposedSong extends Song<ComposedSong, SerializedComposedSong, 4>{
         return this
     }
     moveNotesBy(selectedColumns: number[], amount: number, layer: number | 'all') {
-        const layoutMax = APP_NAME === 'Genshin' ? 21 : 15
+        const layoutMax = APP_NAME === 'Genshin' ? 21 : APP_NAME === 'Heartopia' ? 37 : 15
         const fromNotePosition = new Map([...COMPOSER_NOTE_POSITIONS].reverse().map((n, i) => [n, i]))
         const toNotePosition = new Map([...COMPOSER_NOTE_POSITIONS].reverse().map((n, i) => [i, n]))
         if (layer === 'all') {

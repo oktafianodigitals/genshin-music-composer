@@ -19,7 +19,7 @@ interface SheetFrameProps {
 const baseInstrument = new Instrument()
 
 export function _SheetFrame({chunk, rows, hasText, selected, theme, keyboardLayout}: SheetFrameProps) {
-    const columnsPerRow = APP_NAME === 'Genshin' ? 7 : 5
+    const columnsPerRow = APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 7 : 5
     const color = useMemo(() => {
         return theme.layer('primary', 0.2).toString()
     }, [theme])

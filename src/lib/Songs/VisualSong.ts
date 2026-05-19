@@ -15,7 +15,7 @@ const defaultInstrument = new Instrument()
 
 function getNoteText(index: number, layout: NoteNameType) {
     const text = defaultInstrument.getNoteText(index, layout, "C")
-    return APP_NAME === 'Genshin' ? text.toLowerCase() : text.toUpperCase()
+    return APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? text.toLowerCase() : text.toUpperCase()
 }
 
 export class VisualSong {

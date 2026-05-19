@@ -355,3 +355,520 @@
         border: 2px solid var(--accent);
     }
 }
+
+
+/* ============================================================
+   HEARTOPIA PIANO KEYBOARD — exact match to in-game layout
+   3 rows × (7 white + 5 black) + 1 HIGH DO key
+   HIGH row at top, MID middle, LOW bottom
+   Black keys: smaller, dark, overlaid above the gap
+   ============================================================ */
+
+:root {
+    /* White key size — square buttons */
+    --htp-wk:     7.0vw;
+    /* Black key size — smaller square */
+    --htp-bk:     4.2vw;
+    --htp-bk-half: calc(var(--htp-bk) / 2);
+    /* Gap between white keys */
+    --htp-gap:    0.28rem;
+    /* Gap between rows */
+    --htp-row-gap: 0.45rem;
+    /* How much black key rises above top of white key row */
+    --htp-bk-rise: calc(var(--htp-bk) * 0.35);
+}
+
+@media only screen and (max-width: 920px) {
+    :root {
+        --htp-wk:  9vw;
+        --htp-bk:  5.5vw;
+        --htp-gap: 0.18rem;
+    }
+}
+
+/* ── Outer container ── */
+.heartopia-keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--htp-row-gap);
+    padding-top: var(--htp-bk-rise);   /* room for black keys of HIGH row */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+}
+
+/* ── One octave row (relative so black keys can overflow top) ── */
+.heartopia-row {
+    position: relative;
+    /* Each row is tall enough for white keys; black keys overflow upward via negative top */
+    height: var(--htp-wk);
+}
+
+/* ── Inner flex row: white keys laid left-to-right ── */
+.heartopia-row-inner {
+    display: flex;
+    flex-direction: row;
+    gap: var(--htp-gap);
+    position: relative;
+    height: var(--htp-wk);
+    align-items: flex-end;
+}
+
+/* ── White key slot ── */
+.heartopia-white-key-slot {
+    flex: 0 0 var(--htp-wk);
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    position: relative;
+    z-index: 1;
+}
+
+/* ── High DO slot: same size white key, amber/gold border highlight ── */
+.heartopia-high-do {
+    margin-left: calc(var(--htp-gap) * 2);  /* visual separation from the 7 normal keys */
+}
+
+/* ── Black key slot: absolutely positioned, rises above row ── */
+.heartopia-black-key-slot {
+    position: absolute;
+    /* Sits at top of white key area, shifted up by rise amount */
+    top: calc(var(--htp-bk-rise) * -1);
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    z-index: 10;
+    pointer-events: all;
+}
+
+/* ════════════════════════════════════════════════
+   WHITE KEY NOTE STYLE  (.note-heartopia)
+   ════════════════════════════════════════════════ */
+.note-heartopia,
+.note-composer-heartopia {
+    background-color: var(--note-background, #d3bd8e);
+    border-radius: 50%;                /* circular — matches Genshin style */
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    border: 0.22vw solid rgba(0,0,0,0.25);
+    color: var(--accent, #63aea7);
+    font-size: clamp(0.6rem, 1.1vw, 1.1rem);
+    font-weight: bold;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.08s, background-color 100ms ease, border-color 100ms;
+    cursor: pointer;
+    z-index: 1;
+    touch-action: none;
+    will-change: background-color;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.note-composer-heartopia {
+    transition: background-color 50ms;
+}
+
+/* Note SVG icon */
+.note-heartopia .svg-note,
+.note-composer-heartopia .svg-note,
+.note-heartopia svg,
+.note-composer-heartopia svg {
+    width: 88%;
+    height: 88%;
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Genshin-style border ring on white keys */
+.note-heartopia .genshin-border,
+.note-composer-heartopia .genshin-border {
+    position: absolute;
+    width: 96%;
+    height: 96%;
+    border-radius: 50%;
+}
+
+/* ════════════════════════════════════════════════
+   BLACK KEY NOTE STYLE  (inside .heartopia-black-key-slot)
+   ════════════════════════════════════════════════ */
+.heartopia-black-key-slot .note-heartopia,
+.heartopia-black-key-slot .note-composer-heartopia {
+    background-color: #1e1510;
+    border: 0.18vw solid #0d0a07;
+    border-radius: 35%;               /* slightly rounded square, smaller than white */
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    color: #8a6040;
+    font-size: clamp(0.45rem, 0.75vw, 0.8rem);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.07);
+}
+
+/* No Genshin border on black keys */
+.heartopia-black-key-slot .genshin-border {
+    display: none;
+}
+
+/* Black key SVG icon — smaller */
+.heartopia-black-key-slot .note-heartopia .svg-note,
+.heartopia-black-key-slot .note-composer-heartopia .svg-note,
+.heartopia-black-key-slot .note-heartopia svg,
+.heartopia-black-key-slot .note-composer-heartopia svg {
+    width: 70%;
+    height: 70%;
+}
+
+/* ════════════════════════════════════════════════
+   HIGH DO KEY — amber highlight
+   ════════════════════════════════════════════════ */
+.heartopia-high-do .note-heartopia,
+.heartopia-high-do .note-composer-heartopia {
+    border-color: #d4a354;
+    box-shadow: 0 0 0 0.15vw #d4a354, 0 0 10px rgba(212,163,84,0.3);
+}
+
+/* ════════════════════════════════════════════════
+   NOTE NAME LABEL
+   ════════════════════════════════════════════════ */
+.note-name-heartopia {
+    position: absolute;
+    bottom: 9%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.5rem, 0.9vw, 0.95rem);
+    font-weight: 700;
+    pointer-events: none;
+    color: inherit;
+    white-space: nowrap;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+/* Black key label — smaller, subdued */
+.heartopia-black-key-slot .note-name-heartopia {
+    font-size: clamp(0.35rem, 0.6vw, 0.65rem);
+    bottom: 6%;
+    opacity: 0.75;
+}
+
+/* ════════════════════════════════════════════════
+   INTERACTION STATES
+   ════════════════════════════════════════════════ */
+
+/* Clicked / active */
+.note-heartopia.click-event,
+.note-composer-heartopia.click-event {
+    background-color: var(--accent, #63aea7);
+    transform: scale(0.93);
+}
+
+.heartopia-black-key-slot .note-heartopia.click-event,
+.heartopia-black-key-slot .note-composer-heartopia.click-event {
+    background-color: var(--accent, #63aea7);
+    transform: scale(0.9);
+}
+
+/* Practice: wrong / right */
+.note-heartopia.note-red {
+    background-color: #c95555;
+    border-color: #c95555;
+}
+.note-heartopia.note-border-click {
+    border-color: var(--accent, #63aea7);
+}
+
+/* ════════════════════════════════════════════════
+   COMPOSER LAYER STATES
+   ════════════════════════════════════════════════ */
+.note-composer-heartopia.layer-1 {
+    background-color: var(--accent) !important;
+}
+.note-composer-heartopia.layer-2 {
+    box-shadow: inset 0 0 0 0.22vw var(--composer-layer-2, #8a6dd0) !important;
+}
+.note-composer-heartopia.layer-3 {
+    background-color: var(--composer-layer-2, #8a6dd0) !important;
+}
+
+/* ════════════════════════════════════════════════
+   ANIMATIONS
+   ════════════════════════════════════════════════ */
+.note-animation-heartopia {
+    position: absolute;
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    border-radius: 50%;
+    border: 0.22vw solid var(--accent, #63aea7);
+    animation: note-animation-genshin 0.35s ease-out forwards;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.heartopia-black-key-slot .note-animation-heartopia {
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    border-radius: 35%;
+}
+
+.approach-circle-heartopia {
+    position: absolute;
+    width: calc(var(--htp-wk) * 1.15);
+    height: calc(var(--htp-wk) * 1.15);
+    border-radius: 50%;
+    border: 0.3vw solid var(--accent, #63aea7);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(2.2);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+}
+
+/* ════════════════════════════════════════════════
+   BUTTON HITBOX OVERRIDE (no default button styles)
+   ════════════════════════════════════════════════ */
+.heartopia-white-key-slot .button-hitbox,
+.heartopia-black-key-slot .button-hitbox {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+}
+
+
+/* ============================================================
+   HEARTOPIA PIANO KEYBOARD — exact match to in-game layout
+   3 rows × (7 white + 5 black) + 1 HIGH DO key
+   HIGH row at top, MID middle, LOW bottom
+   Black keys: smaller, dark, overlaid above the gap
+   ============================================================ */
+
+:root {
+    --htp-wk:     7.0vw;
+    --htp-bk:     4.2vw;
+    --htp-bk-half: calc(var(--htp-bk) / 2);
+    --htp-gap:    0.28rem;
+    --htp-row-gap: 0.45rem;
+    --htp-bk-rise: calc(var(--htp-bk) * 0.35);
+}
+
+@media only screen and (max-width: 920px) {
+    :root {
+        --htp-wk:  9vw;
+        --htp-bk:  5.5vw;
+        --htp-gap: 0.18rem;
+    }
+}
+
+.heartopia-keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--htp-row-gap);
+    padding-top: var(--htp-bk-rise);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+}
+
+.heartopia-row {
+    position: relative;
+    height: var(--htp-wk);
+}
+
+.heartopia-row-inner {
+    display: flex;
+    flex-direction: row;
+    gap: var(--htp-gap);
+    position: relative;
+    height: var(--htp-wk);
+    align-items: flex-end;
+}
+
+.heartopia-white-key-slot {
+    flex: 0 0 var(--htp-wk);
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    position: relative;
+    z-index: 1;
+}
+
+.heartopia-high-do {
+    margin-left: calc(var(--htp-gap) * 2);
+}
+
+.heartopia-black-key-slot {
+    position: absolute;
+    top: calc(var(--htp-bk-rise) * -1);
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    z-index: 10;
+    pointer-events: all;
+}
+
+.note-heartopia,
+.note-composer-heartopia {
+    background-color: var(--note-background, #d3bd8e);
+    border-radius: 50%;
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    border: 0.22vw solid rgba(0,0,0,0.25);
+    color: var(--accent, #63aea7);
+    font-size: clamp(0.6rem, 1.1vw, 1.1rem);
+    font-weight: bold;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.08s, background-color 100ms ease, border-color 100ms;
+    cursor: pointer;
+    z-index: 1;
+    touch-action: none;
+    will-change: background-color;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.note-composer-heartopia {
+    transition: background-color 50ms;
+}
+
+.note-heartopia .svg-note,
+.note-composer-heartopia .svg-note,
+.note-heartopia svg,
+.note-composer-heartopia svg {
+    width: 88%;
+    height: 88%;
+    position: absolute;
+    pointer-events: none;
+}
+
+.note-heartopia .genshin-border,
+.note-composer-heartopia .genshin-border {
+    position: absolute;
+    width: 96%;
+    height: 96%;
+    border-radius: 50%;
+}
+
+/* ─ BLACK KEYS ─ */
+.heartopia-black-key-slot .note-heartopia,
+.heartopia-black-key-slot .note-composer-heartopia {
+    background-color: #1e1510;
+    border: 0.18vw solid #0d0a07;
+    border-radius: 35%;
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    color: #8a6040;
+    font-size: clamp(0.45rem, 0.75vw, 0.8rem);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.07);
+}
+
+.heartopia-black-key-slot .genshin-border {
+    display: none;
+}
+
+.heartopia-black-key-slot .note-heartopia .svg-note,
+.heartopia-black-key-slot .note-composer-heartopia .svg-note,
+.heartopia-black-key-slot .note-heartopia svg,
+.heartopia-black-key-slot .note-composer-heartopia svg {
+    width: 70%;
+    height: 70%;
+}
+
+/* ─ HIGH DO ─ */
+.heartopia-high-do .note-heartopia,
+.heartopia-high-do .note-composer-heartopia {
+    border-color: #d4a354;
+    box-shadow: 0 0 0 0.15vw #d4a354, 0 0 10px rgba(212,163,84,0.3);
+}
+
+/* ─ NOTE NAME ─ */
+.note-name-heartopia {
+    position: absolute;
+    bottom: 9%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.5rem, 0.9vw, 0.95rem);
+    font-weight: 700;
+    pointer-events: none;
+    color: inherit;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.heartopia-black-key-slot .note-name-heartopia {
+    font-size: clamp(0.35rem, 0.6vw, 0.65rem);
+    bottom: 6%;
+    opacity: 0.75;
+}
+
+/* ─ CLICK STATES ─ */
+.note-heartopia.click-event,
+.note-composer-heartopia.click-event {
+    background-color: var(--accent, #63aea7);
+    transform: scale(0.93);
+}
+
+.heartopia-black-key-slot .note-heartopia.click-event,
+.heartopia-black-key-slot .note-composer-heartopia.click-event {
+    background-color: var(--accent, #63aea7);
+    transform: scale(0.9);
+}
+
+.note-heartopia.note-red { background-color: #c95555; border-color: #c95555; }
+.note-heartopia.note-border-click { border-color: var(--accent, #63aea7); }
+
+/* ─ COMPOSER LAYERS ─ */
+.note-composer-heartopia.layer-1 { background-color: var(--accent) !important; }
+.note-composer-heartopia.layer-2 { box-shadow: inset 0 0 0 0.22vw var(--composer-layer-2, #8a6dd0) !important; }
+.note-composer-heartopia.layer-3 { background-color: var(--composer-layer-2, #8a6dd0) !important; }
+
+/* ─ ANIMATIONS ─ */
+.note-animation-heartopia {
+    position: absolute;
+    width: var(--htp-wk);
+    height: var(--htp-wk);
+    border-radius: 50%;
+    border: 0.22vw solid var(--accent, #63aea7);
+    animation: note-animation-genshin 0.35s ease-out forwards;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.heartopia-black-key-slot .note-animation-heartopia {
+    width: var(--htp-bk);
+    height: var(--htp-bk);
+    border-radius: 35%;
+}
+
+.approach-circle-heartopia {
+    position: absolute;
+    width: calc(var(--htp-wk) * 1.15);
+    height: calc(var(--htp-wk) * 1.15);
+    border-radius: 50%;
+    border: 0.3vw solid var(--accent, #63aea7);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(2.2);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+}
+
+/* ─ BUTTON HITBOX RESET ─ */
+.heartopia-white-key-slot .button-hitbox,
+.heartopia-black-key-slot .button-hitbox {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+}

@@ -51,7 +51,7 @@ export default function BaseNote<T>({
             className={className}
             style={{borderColor: parseBorderColor(data.status)}}
         >
-            {APP_NAME === 'Genshin' && <GenshinNoteBorder
+            {(APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') && <GenshinNoteBorder
                 className='genshin-border'
                 fill={parseBorderColor(data.status)}
             />}
@@ -88,12 +88,12 @@ function parseBorderColor(status: string) {
     if (status === "clicked") return "transparent"
     if (status === 'wrong') return "#d66969"
     if (status === 'right') return "#358a55"
-    return APP_NAME === "Genshin" ? '#eae5ce' : 'unset'
+    return (APP_NAME === "Genshin" || APP_NAME === "Heartopia") ? '#eae5ce' : 'unset'
 }
 
 function getTextColor() {
     const noteBg = ThemeProvider.get('note_background')
-    if (APP_NAME === 'Genshin') {
+    if (APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') {
         if (noteBg.luminosity() > 0.65) {
             return BASE_THEME_CONFIG.text.note
         } else {

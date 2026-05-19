@@ -17,6 +17,8 @@ export const PAGES_VERSIONS = {
     player: makePageVersion('player', 7,
         APP_NAME === "Genshin"
             ? ["Added Leaping Spirit Piano instrument"]
+            : APP_NAME === "Heartopia"
+            ? ["Heartopia 37-note keyboard support"]
             : [],
     ),
     privacy: makePageVersion('privacy', 0),

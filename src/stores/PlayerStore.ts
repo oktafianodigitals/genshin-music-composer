@@ -53,7 +53,7 @@ class PlayerStore {
     resetKeyboardLayout = () => {
         this.keyboard.forEach(note => note.setState({
             status: '',
-            delay: APP_NAME === 'Genshin' ? 100 : 200
+            delay: APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 100 : 200
         }))
     }
     @action

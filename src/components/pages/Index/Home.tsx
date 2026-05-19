@@ -314,7 +314,7 @@ export default function Home({askForStorage, hasVisited, setDontShowHome, closeW
                 {appScale}%
             </Row>
             <span style={{padding: '0 1rem', textAlign: 'center'}}>
-                {t('rights', {company_name: APP_NAME === 'Genshin' ? 'HoYoverse' : 'TGC'})}
+                {t('rights', {company_name: APP_NAME === 'Genshin' ? 'HoYoverse' : APP_NAME === 'Heartopia' ? 'Heartopia' : 'TGC'})}
             </span>
             <Row gap={'0.5rem'}>
                 <div className='home-dont-show-again row-centered' onClick={() => setDontShowHome(!data.canShow)}>

@@ -16,7 +16,7 @@
     "@tonejs/midi": "^2.0.28",
     "audiobuffer-to-wav": "^1.0.0",
     "color": "^4.2.3",
-    "eslint-config-next": "^14.2.1",
+    "eslint-config-next": "^15.0.0",
     "fflate": "^0.8.2",
     "fontfaceobserver": "^2.3.0",
     "fuzzy-search": "^3.2.1",
@@ -64,7 +64,11 @@
     "dev-tauri:sky": "npm run tauri dev --config ./src-tauri/tauri-sky.conf.json",
     "dev-tauri:genshin": "npm run tauri dev --config ./src-tauri/tauri-genshin.conf.json",
     "dev:sky": "node ./scripts/startApp.js Sky",
-    "dev:genshin": "node ./scripts/startApp.js Genshin"
+    "dev:genshin": "node ./scripts/startApp.js Genshin",
+    "dev:heartopia": "node ./scripts/startApp.js Heartopia",
+    "build:heartopia": "node ./scripts/buildApp.js Heartopia",
+    "build:heartopia-no-root": "node ./scripts/buildApp.js Heartopia false",
+    "preview:heartopia": "npx serve@latest build/heartopiaMusic"
   },
   "browserslist": {
     "production": [
@@ -102,7 +106,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "env-cmd": "^10.1.0",
-    "eslint": "^8.50.0",
+    "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.29.1",

@@ -6,16 +6,18 @@ import urlJoin from 'url-join'
 const publicPath = './public'
 const skyPath = './src/appData/sky'
 const genshinPath = './src/appData/genshin'
+const heartopiaPath = './src/appData/heartopia'
 const chosenApp = process.argv[2]
 
-if (!['Genshin', 'Sky'].includes(chosenApp)) {
-    console.error('Please specify an app name [Sky/Genshin]')
+if (!['Genshin', 'Sky', 'Heartopia'].includes(chosenApp)) {
+    console.error('Please specify an app name [Sky/Genshin/Heartopia]')
     process.exit(1)
 }
 
 
 async function execute() {
-    await fse.copy(chosenApp === "Sky" ? skyPath : genshinPath, publicPath, { overwrite: true })
+    const appPath = chosenApp === "Sky" ? skyPath : chosenApp === "Heartopia" ? heartopiaPath : genshinPath
+    await fse.copy(appPath, publicPath, { overwrite: true })
     updateManifest("")
     if (process.platform === 'win32') {
         console.log(clc.yellow.bold("Starting on windows"))

@@ -70,7 +70,7 @@ export default memo(function ComposerNote({
         onContextMenu={preventDefault}
     >
         <div className={className}>
-            {APP_NAME === 'Genshin' && <GenshinNoteBorder
+            {(APP_NAME === 'Genshin' || APP_NAME === 'Heartopia') && <GenshinNoteBorder
                 fill={colors.note_background}
                 className='genshin-border'
             />}
@@ -84,7 +84,7 @@ export default memo(function ComposerNote({
             <div className='layer-4-line'>
             </div>
             <div
-                className={APP_NAME === "Sky" ? "note-name-sky" : "note-name"}
+                className={APP_NAME === "Sky" ? "note-name-sky" : APP_NAME === "Heartopia" ? "note-name-heartopia" : "note-name"}
             >
                 {noteText}
             </div>

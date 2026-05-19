@@ -12,7 +12,8 @@ type AppUpdateSchema = {
 }
 type UpdateSchema = {
     Sky: AppUpdateSchema,
-    Genshin: AppUpdateSchema
+    Genshin: AppUpdateSchema,
+    Heartopia: AppUpdateSchema
 }
 
 export async function checkIfneedsUpdate() {

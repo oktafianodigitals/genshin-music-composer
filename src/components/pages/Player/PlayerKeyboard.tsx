@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import {APP_NAME, NoteNameType, Pitch, SPEED_CHANGERS} from "$config"
 import Note from '$cmp/pages/Player/PlayerNote'
+import HeartopiaPlayerKeyboard from '$cmp/pages/Player/HeartopiaPlayerKeyboard'
 import {playerStore} from '$stores/PlayerStore'
 import {Array2d, clamp, delay, groupArrayEvery} from "$lib/utils/Utilities"
 import Analytics from '$lib/Analytics';
@@ -63,7 +64,7 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
         this.state = {
             playTimestamp: Date.now(),
             songToPractice: [],
-            approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : 21),
+            approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : APP_NAME === 'Heartopia' ? 37 : 21),
             keyboard: playerStore.keyboard
         }
         this.mounted = true
@@ -186,7 +187,7 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
         playerControlsStore.clearPages()
         playerControlsStore.resetScore()
         this.setState({
-            approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : 21),
+            approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : APP_NAME === 'Heartopia' ? 37 : 21),
         })
         this.approachingNotesList = notes
     }
@@ -305,7 +306,7 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
         firstChunk.notes.forEach(note => {
             playerStore.setNoteState(note.index, {
                 status: 'toClick',
-                delay: APP_NAME === 'Genshin' ? 100 : 200
+                delay: APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 100 : 200
             })
         })
         const secondChunk = chunks[1]
@@ -333,7 +334,7 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
             this.approachingNotesList = []
             this.setState({
                 songToPractice: [],
-                approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : 21)
+                approachingNotes: Array2d.from(APP_NAME === 'Sky' ? 15 : APP_NAME === 'Heartopia' ? 37 : 21)
             }, res)
             this.props.functions.setHasSong(false)
         })
@@ -397,7 +398,7 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
         playerStore.setNoteState(note.index, {
             status: 'clicked',
             delay: playerStore.eventType !== 'play'
-                ? APP_NAME === 'Genshin' ? 100 : 200
+                ? APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 100 : 200
                 : 0,
             animationId: (hasAnimation && playerStore.eventType !== 'approaching')
                 ? Math.floor(Math.random() * 10000) + Date.now()
@@ -427,10 +428,11 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
         const {keyboard} = state
         const size = clamp(data.keyboardSize / 100, 0.5, 1.5)
         let keyboardClass = "keyboard" + (playerStore.eventType === 'play' ? " keyboard-playback" : "")
-        if (keyboard.length === 15) keyboardClass += " keyboard-5"
-        if (keyboard.length === 14) keyboardClass += " keyboard-5"
-        if (keyboard.length === 8) keyboardClass += " keyboard-4"
-        if (keyboard.length === 6) keyboardClass += " keyboard-3"
+        if (APP_NAME === 'Heartopia') keyboardClass += " keyboard-heartopia"
+        else if (keyboard.length === 15) keyboardClass += " keyboard-5"
+        else if (keyboard.length === 14) keyboardClass += " keyboard-5"
+        else if (keyboard.length === 8) keyboardClass += " keyboard-4"
+        else if (keyboard.length === 6) keyboardClass += " keyboard-3"
         const hideNotes = data.hideNotesInPracticeMode && this.mode === 'practice'
         const style = size !== 1 ? {transform: `scale(${size})`} : {}
         return <>
@@ -445,21 +447,31 @@ export default class KeyboardPlayer extends Component<KeyboardPlayerProps, Keybo
                 {data.isLoading
                     ? <div className="loading">{i18n.t("common:loading")}...</div>
 
-                    : keyboard.map(note => {
-                        return <Note
-                            key={note.index}
-                            note={note}
-                            data={{
-                                approachRate: this.approachRate,
-                                instrument: instrument.name,
-                            }}
-                            hideNote={hideNotes}
-                            approachingNotes={state.approachingNotes[note.index]}
+                    : APP_NAME === 'Heartopia'
+                        ? <HeartopiaPlayerKeyboard
+                            keyboard={keyboard}
+                            instrument={instrument}
+                            noteNameType={noteNameType}
+                            pitch={pitch}
+                            approachingNotes={state.approachingNotes}
+                            approachRate={this.approachRate}
+                            hideNotes={hideNotes}
                             handleClick={this.handleClick}
-                            noteText={instrument.getNoteText(note.index, noteNameType, pitch)}
-                        />
-
-                    })
+                          />
+                        : keyboard.map(note => {
+                            return <Note
+                                key={note.index}
+                                note={note}
+                                data={{
+                                    approachRate: this.approachRate,
+                                    instrument: instrument.name,
+                                }}
+                                hideNote={hideNotes}
+                                approachingNotes={state.approachingNotes[note.index]}
+                                handleClick={this.handleClick}
+                                noteText={instrument.getNoteText(note.index, noteNameType, pitch)}
+                            />
+                        })
                 }
             </div>
         </>

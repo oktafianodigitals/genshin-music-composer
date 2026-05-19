@@ -58,7 +58,7 @@ export class Instrument {
 
     constructor(name: InstrumentName = INSTRUMENTS[0]) {
         this.name = name
-        if (!INSTRUMENTS.includes(this.name as any)) this.name = INSTRUMENTS[0]
+        if (!(INSTRUMENTS as readonly string[]).includes(this.name)) this.name = INSTRUMENTS[0]
         this.instrumentData = {...INSTRUMENTS_DATA[this.name as keyof typeof INSTRUMENTS_DATA]}
         const layouts = this.instrumentData.layout
         this.layouts = {
@@ -77,6 +77,10 @@ export class Instrument {
             const note = new ObservableNote(i, noteNames, url, this.instrumentData.baseNotes[i], this.instrumentData.midiNotes[i] ?? 0)
             note.instrument = this.name
             note.noteImage = this.instrumentData.icons[i]
+            // Mark black keys (accidentals) for Heartopia — indices 22-36 are black keys
+            if (APP_NAME === 'Heartopia') {
+                note.isAccidental = i >= 22
+            }
             this.notes.push(note)
         }
     }
@@ -214,13 +218,15 @@ export type NoteDataState = {
 
 export class ObservableNote {
     index: number
-    noteImage: NoteImage = APP_NAME === "Genshin" ? "do" : "cr"
+    noteImage: NoteImage = APP_NAME === "Genshin" || APP_NAME === "Heartopia" ? "do" : "cr"
     midiNote: number
     instrument: InstrumentName = INSTRUMENTS[0]
     noteNames: NoteName
     url: string
     baseNote: BaseNote = "C"
     buffer: ArrayBuffer = new ArrayBuffer(8)
+    // Heartopia: true for black keys (accidentals), false for white keys
+    isAccidental: boolean = false
     @observable
     readonly data: NoteDataState = {
         status: '',

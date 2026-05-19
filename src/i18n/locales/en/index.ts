@@ -794,6 +794,9 @@ export const i18n_en = {
         "LingeringEuphonia": "Lingering Euphonia",
         "LeapingSpiritPiano": "Leaping Spirit Piano",
         "HarmonicKey": "Harmonic Key",
+        "PianoHato": "Piano",
+        "GuitarHato": "Guitar",
+        "FluteHato": "Flute",
     } satisfies Record<InstrumentName, string>,
     versions: {
         "3-7-0": {

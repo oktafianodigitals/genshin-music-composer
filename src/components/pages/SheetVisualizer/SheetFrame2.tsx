@@ -38,7 +38,7 @@ function getBorderStyle(index: number, total: number): React.CSSProperties {
 const baseInstrument = new Instrument()
 
 export function _SheetFrame2({chunk, rows, hasText, theme, keyboardLayout, multiColorRows}: SheetFrameProps) {
-    const columnsPerRow = APP_NAME === 'Genshin' ? 7 : 5
+    const columnsPerRow = APP_NAME === 'Genshin' || APP_NAME === 'Heartopia' ? 7 : 5
     const colors = useMemo(() => {
         const color = theme.layer('primary', 0.2).toString()
         if (multiColorRows) {
